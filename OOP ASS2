@@ -1,0 +1,118 @@
+import java.util.ArrayList;
+
+// Interface for Recipe generation
+interface RecipeGenerator {
+    void generateRecipe();
+    void setDifficultyLevel(String level);
+    String getEstimatedTime();
+}
+
+// Interface for Nutrition information
+interface NutritionInfo {
+    double calculateCalories();
+    double calculateCarbs();
+    double calculateProteins();
+}
+
+// Ingredient class as per UML diagram
+class Ingredient {
+    private String name;
+    private double quantity;
+    private String unit;
+
+    public Ingredient(String name, double quantity, String unit) {
+        this.name = name;
+        this.quantity = quantity;
+        this.unit = unit;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public double getQuantity() {
+        return quantity;
+    }
+
+    public String getUnit() {
+        return unit;
+    }
+}
+
+// Recipe class implementing RecipeGenerator, NutritionInfo, and Comparable interfaces
+class Recipe implements RecipeGenerator, NutritionInfo, Comparable<Recipe> {
+    private String name;
+    private String description;
+    private ArrayList<Ingredient> ingredients;
+
+    public Recipe(String name, String description) {
+        this.name = name;
+        this.description = description;
+        this.ingredients = new ArrayList<>();
+    }
+
+    // Implement methods from RecipeGenerator interface
+    @Override
+    public void generateRecipe() {
+        System.out.println("Recipe generated: " + name);
+    }
+
+    @Override
+    public void setDifficultyLevel(String level) {
+        System.out.println("Difficulty Level set to: " + level);
+    }
+
+    @Override
+    public String getEstimatedTime() {
+        return "30 minutes";
+    }
+
+    // Implement methods from NutritionInfo interface
+    @Override
+    public double calculateCalories() {
+        return ingredients.stream().mapToDouble(Ingredient::getQuantity).sum() * 100; // Example calculation
+    }
+
+    @Override
+    public double calculateCarbs() {
+        return ingredients.stream().mapToDouble(Ingredient::getQuantity).sum() * 10; // Example calculation
+    }
+
+    @Override
+    public double calculateProteins() {
+        return ingredients.stream().mapToDouble(Ingredient::getQuantity).sum() * 5; // Example calculation
+    }
+
+    // Implement Comparable interface
+    @Override
+    public int compareTo(Recipe other) {
+        return this.name.compareTo(other.name);
+    }
+
+    // Other methods as per the UML diagram
+    public void addIngredient(Ingredient ingredient) {
+        ingredients.add(ingredient);
+    }
+
+    public void deleteIngredient(Ingredient ingredient) {
+        ingredients.remove(ingredient);
+    }
+}
+
+// Main class to demonstrate usage
+public class Main {
+    public static void main(String[] args) {
+        Recipe recipe = new Recipe("Pasta", "Delicious pasta recipe.");
+        recipe.addIngredient(new Ingredient("Tomato", 2.0, "pcs"));
+        recipe.addIngredient(new Ingredient("Pasta", 200.0, "grams"));
+
+        recipe.generateRecipe();
+        recipe.setDifficultyLevel("Easy");
+
+        System.out.println("Estimated Time: " + recipe.getEstimatedTime());
+        System.out.println("Total Calories: " + recipe.calculateCalories());
+
+        Recipe anotherRecipe = new Recipe("Salad", "Fresh salad recipe.");
+        System.out.println("Comparison result: " + recipe.compareTo(anotherRecipe));
+    }
+}
